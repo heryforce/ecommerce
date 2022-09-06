@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Mon panier{% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+	<h1 class="bg-light text-center my-3">{% trans %}Mon panier{% endtrans %}</h1>
+
+	{% if items | length > 0 %}
+		{# si mon panier contient au moins 1 produit, j'affiche le contenu #}
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>{% trans %}Produit{% endtrans %}</th>
+					<th>{% trans %}Prix{% endtrans %}</th>
+					<th>{% trans %}Quantité{% endtrans %}</th>
+					<th>{% trans %}Ajout{% endtrans %}/{% trans %}Suppr{% endtrans %}</th>
+					<th>{% trans %}Total{% endtrans %}</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in items %}
+					{# pour chaque produit contenu dans mon panier je vais afficher les données du produit (nom prix etc) #}
+					<tr>
+						<td>{{ item.product.nom }}</td>
+						<td>{{ item.product.prix }}€</td>
+						<td>{{ item.quantity }}
+						</td>
+						<td>
+							<a href="{{ path('cart_add', {'id' : item.product.id }) }}" class="btn btn-success btn-sm">
+								<i class="fas fa-plus"></i>
+							</a>
+							<a href="{{ path('cart_decrement', {'id': item.product.id}) }}" class="btn btn-success btn-sm">
+								<i class="fas fa-minus"></i>
+							</a>
+						</td>
+						<td>{{ item.product.prix * item.quantity }}€</td>
+						<td>
+							<a href="{{ path('cart_delete', {'id': item.product.id}) }}" class="btn btn-danger btn-sm">
+								<i class="fas fa-trash"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="4" class="text-end">{% trans %}Total{% endtrans %} :
+					</td>
+					<td>{{ total }}€</td>
+					<td>
+						<a href="{{ path('cart_empty') }}" class="btn btn-danger btn-sm">
+							<i class="fa fa-ban"></i>
+						</a>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		<div class="row">
+			<div class="col-6 mx-auto">
+				<a href="{{ path('cart_pay') }}" class="btn btn-success btn-lg w-100">{% trans %}Payer{% endtrans %}</a>
+			</div>
+		</div>
+	{% else %}
+		<p>{% trans %}Mon panier est vide !{% endtrans %}</p>
+	{% endif %}
+
+
+{% endblock %}

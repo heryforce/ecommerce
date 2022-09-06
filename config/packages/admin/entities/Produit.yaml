@@ -1,0 +1,26 @@
+easy_admin:
+  entities:
+    Produit:
+      class: App\Entity\Produit
+      list:
+        fields:
+          - {property: 'id'}
+          - {property: 'nom'}
+          - {property: 'description'}
+          - {property: 'prix'}
+          - {property: 'image', type: 'image', base_path: '/images/produits/'}
+          - {property: 'categorie'}
+          - {property: 'auteur'}
+
+        actions:
+          - {name: 'edit', icon: 'pencil', label: false, css_class: 'btn btn-primary mb-1'}
+          - {name: 'delete', icon: 'trash', label: false, css_class: 'btn btn-danger'}
+
+      form:
+        fields:
+          - {property: 'nom'}
+          - {property: 'description'}
+          - {property: 'prix'}
+          - {property: 'imageFile', type: 'file'}
+          - {property: 'categorie'}
+          - {property: 'auteur'}

@@ -1,0 +1,22 @@
+easy_admin:
+  entities:
+    Commentaire:
+      class: App\Entity\Commentaire
+      list:
+        fields:
+          - {property: 'id'}
+          - {property: 'contenu'}
+          - {property: 'createdAt', label: "Date d'ajout", format: "d/m/Y à H:m:s"}
+          - {property: 'auteur'}
+          - {property: 'produit'}
+
+        actions:
+            - {name: 'edit', icon: 'pencil', label: false, css_class: 'btn btn-primary mb-1'}
+            - {name: 'delete', icon: 'trash', label: false, css_class: 'btn btn-danger'}
+
+      form:
+        fields:
+          - {property: 'contenu'}
+          - {property: 'createdAt', label: "Date d'ajout"}
+          - {property: 'auteur'}
+          - {property: 'produit'}

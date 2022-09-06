@@ -1,0 +1,87 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{% trans %}Détails du produit{% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+	{% for msg in app.flashes('success') %}
+		<div class="alert alert-success text-center">
+			{{ msg }}
+		</div>
+	{% endfor %}
+
+{# affichage des msg flash #}
+
+	<h1 class="text-center bg-light my-3">{% trans %}Fiche produit{% endtrans %} : "{{ produit.nom }}"</h1>
+
+	<div class="row">
+		<div class="col-md-4">
+			<img src="{{ asset('images/produits/' ~ produit.image) }}" alt="Image de {{ produit.nom }}" style="width: 200px">
+		</div>
+		<div class="col md-8">
+			<h3>
+				{{ produit.description }}
+			</h3>
+			<h4>
+				{{ produit.prix }}€
+			</h4>
+			<h5>
+				{% trans %}Ajouté par{% endtrans %} <a href="{{ path('profil_show', { 'id': produit.auteur.id}) }}">{{ produit.auteur.username }}</a> {% trans %}dans la catégorie{% endtrans %} {{ produit.categorie }}
+				{# le pseudo de l'utilisateur a qui appartient le produit est un lien vers sa page de profil #}
+			</h5>
+
+			{% if app.user is same as (produit.auteur) %}
+				<a href="{{ path('produit_edit', {'id': produit.id}) }}" class="btn btn-primary">{% trans %}Editer mon produit{% endtrans %}</a>
+				{# si l'utilisateur connecté est le même que celui qui a posté le produit, il voit un lien permettant d'éditer le produit #}
+			{% endif %}
+			<a href="{{ path('cart_add', {'id': produit.id}) }}" class="btn btn-success">{% trans %}Ajouter au panier{% endtrans %}</a>
+		</div>
+	</div>
+
+
+	<h2 class="text-center my-3 bg-light">{% trans %}Commentaires des utilisateurs{% endtrans %}</h2>
+
+	{% if coms | length <= 0 %}
+
+		<h3>
+			{% trans %}Aucun commentaire{% endtrans %}
+		</h3>
+
+	{% else %}
+
+		<table class="table table-bordered">
+			<tbody>
+				{% for com in coms %}
+					<tr>
+						<td>{% trans %}Posté par{% endtrans %}
+							{{ com.auteur }}
+							<br>
+							<small>le
+								{{ com.createdAt | date('d/m/Y à H:i:s') }}</small>
+						</td>
+						<td>{{ com.contenu }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+
+
+	{% if app.user %}
+		{{ form_start(cForm) }}
+		{{ form_row(cForm.contenu, {
+        'label': 'Votre commentaire'
+    }) }}
+		<button class="btn btn-primary" type="submit">{% trans %}Poster{% endtrans %}</button>
+		{{ form_end(cForm) }}
+	{% else %}
+		<a href="{{ path('app_login') }}">{% trans %}Veuillez vous connecter pour poster un commentaire.{% endtrans %}</a>
+	{% endif %}
+
+{# 
+	si l'utilisateur est connecté, il peut voir le formulaire pour poster un commentaire
+	sinon, un lien s'affiche pour qu'il puisse se connecter
+ #}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+easy_admin:
+    design:
+      brand_color: '#1ABC9C'
+      menu:
+        - label: 'E-commerce'
+          children:
+            - {entity: 'Commentaire', icon: 'folder-open', label: Commentaires}
+            - {entity: 'Categorie', icon: 'folder-open', label: Catégories}
+            - {entity: 'Produit', icon: 'folder-open', label: Produits}
+        
+        - label: 'Accès'
+          icon: 'user'
+          children:
+            - {entity: 'User', icon: 'folder-open', label: Utilisateurs}
+imports:
+  - {resource: admin/}

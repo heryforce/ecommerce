@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{% trans %}Interdit !{% endtrans %}{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center">{% trans %}403 z'avez pas l'droiiiiiit{% endtrans %}</h1>
+
+<h3>{% trans %}Désolé, mais vous avez pas le droit d'aller là.{% endtrans %} <a href="{{ path('produit') }}">{% trans %}Cliquez ici{% endtrans %}</a> {% trans %}pour retourner à l'accueil !{% endtrans %}</h3>
+
+{% endblock %}

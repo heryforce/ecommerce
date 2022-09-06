@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Produits{% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+	<h1 class="text-center bg-light my-3">{% trans %}Liste des produits{% endtrans %}</h1>
+
+	{% if produits | length <= 0 %}
+
+		<h2>{% trans %}Il n'existe pas encore de produits sur ce site ! Patientez un peu...{% endtrans %}
+		</h2>
+
+	{% else %}
+
+		{{ form_start(sForm) }}
+		{{ form_widget(sForm.recherche, {
+			'attr': {
+				'placeholder': 'Recherchez un produit par son nom'
+			}
+		}) }}
+
+		<button class="btn btn-primary mt-2" type="submit">{% trans %}Rechercher{% endtrans %}</button>
+		<a href="{{ 'produit' }}" class="btn btn-info mt-2 ml-2 ">{% trans %}Remise à zéro{% endtrans %}</a>
+		{{ form_end(sForm) }}
+
+		<div class="row">
+			{% for produit in produits %}
+				<div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch my-2">
+					<div class="card" style="width: 18rem;">
+						<img src="{{ asset('images/produits/' ~ produit.image) }}" class="img-fluid" alt="Image du produit {{ produit.nom }}">
+						<div class="card-body">
+							<h5 class="card-title">{{produit.nom}}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">{{ produit.prix}}€</h6>
+							<p class="card-text">
+								{% if produit.description | length > 33 %}
+									{{ produit.description | slice(0, 33)}}...
+								{% else %}
+									{{ produit.description }}
+								{% endif %}
+							</p>
+
+							{# 
+							si la description contient + de 33 caractères, je coupe la description
+							sinon, j'affiche la description entière
+							#}
+
+						</div>
+						<div class="card-footer">
+							<a href="{{ path('produit_show', {'id': produit.id }) }}" class="btn btn-primary">{% trans %}Voir le produit{% endtrans %}</a>
+							Par
+							<b>{{ produit.auteur }}</b>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}

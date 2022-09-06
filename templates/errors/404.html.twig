@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{% trans %}Y'a pas !{% endtrans %}{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center">{% trans %}404 pas trouvééééééé{% endtrans %}</h1>
+
+<h3>{% trans %}Désolé, mais le produit indiqué n'existe pas. {% endtrans %}<a href="{{ path('produit') }}">{% trans %}Cliquez ici{% endtrans %}</a> {% trans %}pour retourner à l'accueil !{% endtrans %}</h3>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+
+{% if editMode %}
+    {% trans %}Edition du produit{% endtrans %}
+{% else %}
+    {% trans %}Ajout du produit{% endtrans %}
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+<h1 class="bg-light text-center my-3">
+
+{% if editMode %}
+    {% trans %}Edition de{% endtrans %} "{{ produit.nom }}"
+{% else %}
+    {% trans %}Ajout d'un nouveau produit{% endtrans %}
+{% endif %}
+
+</h1>
+
+{{ form_start(pForm) }}
+
+{{ form_row(pForm.nom, {
+    'label': 'Nom du produit'
+}) }}
+{{ form_row(pForm.description) }}
+{{ form_row(pForm.prix) }}
+{{ form_row(pForm.imageFile, {
+    'label': 'Image'
+}) }}
+{{ form_row(pForm.categorie, {
+    'label': 'Catégorie'
+}) }}
+
+<button type="submit" class="btn btn-primary my-2">
+
+{% if editMode %}
+    {% trans %}Sauvegarder les changements{% endtrans %}
+{% else %}
+    {% trans %}Ajouter le produit{% endtrans %}
+{% endif %}
+
+</button>
+{{ form_end(pForm) }}
+
+
+{% endblock %}
