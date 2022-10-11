@@ -3,15 +3,26 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
+    private $hasher;
+
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+    
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -27,22 +38,24 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $username = TextField::new('username');
-        $roles = CollectionField::new('roles');
-        $email = TextField::new('email');
-        $id = IntegerField::new('id', 'ID');
-        $password = TextField::new('password');
-        $commentaires = AssociationField::new('commentaires');
-        $produits = AssociationField::new('produits');
+        return [
+            IdField::new('id')->hideOnForm(),
+            TextField::new('username', 'Pseudo'),
+            CollectionField::new('roles'),
+            TextField::new('email'),
+            TextField::new('password', 'Mot de passe')->setFormType(PasswordType::class)->onlyWhenCreating(),
+            AssociationField::new('produits', 'Produits ajoutés')->hideOnForm(),
+        ];
+    }
 
-        if (Crud::PAGE_INDEX === $pageName) {
-            return [$id, $username, $roles, $email];
-        } elseif (Crud::PAGE_DETAIL === $pageName) {
-            return [$id, $username, $roles, $password, $email, $commentaires, $produits];
-        } elseif (Crud::PAGE_NEW === $pageName) {
-            return [$username, $roles, $email];
-        } elseif (Crud::PAGE_EDIT === $pageName) {
-            return [$username, $roles, $email];
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (!$entityInstance->getId()) {
+            $entityInstance->setPassword(
+                $this->hasher->hashPassword($entityInstance, $entityInstance->getPassword())
+            );
         }
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
     }
 }
