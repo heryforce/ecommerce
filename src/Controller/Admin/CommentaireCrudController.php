@@ -23,7 +23,7 @@ class CommentaireCrudController extends AbstractCrudController
     {
         return $crud
             ->setEntityLabelInSingular('Commentaire')
-            ->setEntityLabelInPlural('Commentaire')
+            ->setEntityLabelInPlural('Commentaires')
             ->setSearchFields(['id', 'contenu']);
     }
 
