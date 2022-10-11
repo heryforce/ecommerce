@@ -4,11 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\Commentaire;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 
 class CommentaireCrudController extends AbstractCrudController
 {
@@ -27,20 +29,20 @@ class CommentaireCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        $contenu = TextareaField::new('contenu');
-        $createdAt = DateTimeField::new('createdAt');
-        $auteur = AssociationField::new('auteur');
-        $produit = AssociationField::new('produit');
-        $id = IntegerField::new('id', 'ID');
+        return [
+            IdField::new('id')->hideOnForm(),
+            TextareaField::new('contenu')->hideOnForm(),
+            DateTimeField::new('createdAt', "Date d'ajout")->setFormat('d/M/Y à H:m:s')->hideOnForm(),
+            AssociationField::new('auteur'),
+            AssociationField::new('produit'),
+            TextEditorField::new('contenu')->onlyOnForms(),
+        ];
+    }
 
-        if (Crud::PAGE_INDEX === $pageName) {
-            return [$id, $contenu, $createdAt, $auteur, $produit];
-        } elseif (Crud::PAGE_DETAIL === $pageName) {
-            return [$id, $contenu, $createdAt, $auteur, $produit];
-        } elseif (Crud::PAGE_NEW === $pageName) {
-            return [$contenu, $createdAt, $auteur, $produit];
-        } elseif (Crud::PAGE_EDIT === $pageName) {
-            return [$contenu, $createdAt, $auteur, $produit];
-        }
+    public function createEntity(string $entityFqcn)
+    {
+        $com = new $entityFqcn;
+        $com->setCreatedAt(new \DateTime);
+        return $com;
     }
 }

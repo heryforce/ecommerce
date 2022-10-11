@@ -27,16 +27,16 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         $submenu1 = [
-            MenuItem::linkToCrud('Commentaires', 'fas fa-folder-open', Commentaire::class),
-            MenuItem::linkToCrud('Catégories', 'fas fa-folder-open', Categorie::class),
-            MenuItem::linkToCrud('Produits', 'fas fa-folder-open', Produit::class),
+            MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Commentaire::class),
+            MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class),
+            MenuItem::linkToCrud('Produits', 'fas fa-candy-cane', Produit::class),
         ];
 
         $submenu2 = [
-            MenuItem::linkToCrud('Utilisateurs', 'fas fa-folder-open', User::class),
+            MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class),
         ];
 
-        yield MenuItem::subMenu('E-commerce', 'fas fa-folder-open')->setSubItems($submenu1);
+        yield MenuItem::subMenu('E-commerce', 'fas fa-euro-sign')->setSubItems($submenu1);
         yield MenuItem::subMenu('Accès', 'fas fa-user')->setSubItems($submenu2);
     }
 }
