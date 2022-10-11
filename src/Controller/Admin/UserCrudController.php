@@ -45,6 +45,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email'),
             TextField::new('password', 'Mot de passe')->setFormType(PasswordType::class)->onlyWhenCreating(),
             AssociationField::new('produits', 'Produits ajoutés')->hideOnForm(),
+            CollectionField::new('roles')->setTemplatePath('admin/field/roles.html.twig'),
         ];
     }
 
