@@ -10,9 +10,20 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
 
 class DashboardController extends AbstractDashboardController
 {
+    /**
+     * @Route("/admin", name="admin")
+     */
+    public function index(): Response
+    {
+        return parent::index();
+    }
+
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
@@ -36,6 +47,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class),
         ];
         return [
+            MenuItem::linkToRoute('Retour au site', 'fas fa-arrow-left', 'produit'),
             MenuItem::subMenu('E-commerce', 'fas fa-euro-sign')->setSubItems($submenu1),
             MenuItem::subMenu('Accès', 'fas fa-user')->setSubItems($submenu2),
         ];
