@@ -4,6 +4,8 @@ namespace App\EventListener;
 
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+// permet de changer la langue du site
+
 class RequestListener
 {
     public function onKernelRequest(RequestEvent $event)
