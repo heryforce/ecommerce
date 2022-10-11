@@ -4,14 +4,16 @@ namespace App\Controller\Admin;
 
 use App\Entity\Produit;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 
 class ProduitCrudController extends AbstractCrudController
 {
@@ -24,30 +26,21 @@ class ProduitCrudController extends AbstractCrudController
     {
         return $crud
             ->setEntityLabelInSingular('Produit')
-            ->setEntityLabelInPlural('Produit')
+            ->setEntityLabelInPlural('Produits')
             ->setSearchFields(['id', 'nom', 'description', 'prix', 'image']);
     }
 
     public function configureFields(string $pageName): iterable
     {
-        $nom = TextField::new('nom');
-        $description = TextareaField::new('description');
-        $prix = NumberField::new('prix');
-        $imageFile = Field::new('imageFile');
-        $categorie = AssociationField::new('categorie');
-        $auteur = AssociationField::new('auteur');
-        $id = IntegerField::new('id', 'ID');
-        $image = ImageField::new('image');
-        $commentaire = AssociationField::new('commentaire');
-
-        if (Crud::PAGE_INDEX === $pageName) {
-            return [$id, $nom, $description, $prix, $image, $categorie, $auteur];
-        } elseif (Crud::PAGE_DETAIL === $pageName) {
-            return [$id, $nom, $description, $prix, $image, $categorie, $auteur, $commentaire];
-        } elseif (Crud::PAGE_NEW === $pageName) {
-            return [$nom, $description, $prix, $imageFile, $categorie, $auteur];
-        } elseif (Crud::PAGE_EDIT === $pageName) {
-            return [$nom, $description, $prix, $imageFile, $categorie, $auteur];
-        }
+        return [
+            IdField::new('id')->hideOnForm(),
+            TextField::new('nom'),
+            TextareaField::new('description')->hideOnForm(),
+            TextEditorField::new('description')->onlyOnForms(),
+            NumberField::new('prix'),
+            ImageField::new('image')->setBasePath('/images/produits/')->setUploadDir('public/images/produits/')->setUploadedFileNamePattern('[ulid].[extension]')->setRequired(false),
+            AssociationField::new('categorie'),
+            AssociationField::new('auteur'),
+        ];
     }
 }
