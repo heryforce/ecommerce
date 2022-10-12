@@ -39,9 +39,9 @@
 									<a class="dropdown-item" href="{{ path('app_logout') }}">{% trans %}Se déconnecter{% endtrans %}</a>
 								</div>
 							</li>
-							<li class="nav-item">
+							{# <li class="nav-item">
 								<a class="nav-link active" href="{{ path('produit_add') }}">{% trans %}Ajouter un produit{% endtrans %}</a>
-							</li>
+							</li> #}
 						{% else %}
 							<li class="nav-item">
 								<a class="nav-link active" href="{{ path('app_login') }}">{% trans %}Se connecter{% endtrans %}</a>
@@ -59,11 +59,12 @@
 							<a href="{{ path('contact') }}" class="nav-link active">{% trans %}Contactez-nous !{% endtrans %}</a>
 						</li>
 					</ul>
-					{% if app.request.get('_locale') == 'fr' %}
-						<a href="{{ path('set_locale') }}"><img src="{{ asset('icons/gb.png') }}" alt="" style="width: 20px;" class="mx-2"></a>
 
+					{% if app.request.attributes.get('_locale') == 'fr' %}
+						<a href="{{ path('set_locale', {loc: 'en'}) }}"><img src="{{ asset('icons/gb.png') }}" alt="" style="width: 20px;" class="mx-2"></a>
 					{% else %}
-						<a href="{{ path('set_locale') }}"><img src="{{ asset('icons/fr.png') }}" alt="" style="width: 20px;" class="mx-2"></a>
+
+						<a href="{{ path('set_locale', {loc: 'fr'}) }}"><img src="{{ asset('icons/fr.png') }}" alt="" style="width: 20px;" class="mx-2"></a>
 
 					{% endif %}
 

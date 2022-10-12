@@ -25,21 +25,21 @@
 				{% for item in items %}
 					{# pour chaque produit contenu dans mon panier je vais afficher les données du produit (nom prix etc) #}
 					<tr>
-						<td>{{ item.product.nom }}</td>
-						<td>{{ item.product.prix }}€</td>
+						<td>{{ item.product.name }}</td>
+						<td>{{ item.price }}€</td>
 						<td>{{ item.quantity }}
 						</td>
 						<td>
-							<a href="{{ path('cart_add', {'id' : item.product.id }) }}" class="btn btn-success btn-sm">
-								<i class="fas fa-plus"></i>
-							</a>
-							<a href="{{ path('cart_decrement', {'id': item.product.id}) }}" class="btn btn-success btn-sm">
+						<a href="{{ path('cart_decrement', {'id': item.id}) }}" class="btn btn-success btn-sm">
 								<i class="fas fa-minus"></i>
 							</a>
+							<a href="{{ path('cart_add', {'id' : item.id }) }}" class="btn btn-success btn-sm">
+								<i class="fas fa-plus"></i>
+							</a>
 						</td>
-						<td>{{ item.product.prix * item.quantity }}€</td>
+						<td>{{ item.price * item.quantity }}€</td>
 						<td>
-							<a href="{{ path('cart_delete', {'id': item.product.id}) }}" class="btn btn-danger btn-sm">
+							<a href="{{ path('cart_delete', {'id': item.id}) }}" class="btn btn-danger btn-sm">
 								<i class="fas fa-trash"></i>
 							</a>
 						</td>
@@ -61,7 +61,7 @@
 		</table>
 		<div class="row">
 			<div class="col-6 mx-auto">
-				<a href="{{ path('cart_pay') }}" class="btn btn-success btn-lg w-100">{% trans %}Payer{% endtrans %}</a>
+				<a href="{{ path('checkout') }}" class="btn btn-success btn-lg w-100">{% trans %}Payer{% endtrans %}</a>
 			</div>
 		</div>
 	{% else %}

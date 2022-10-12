@@ -30,28 +30,23 @@
 			{% for produit in produits %}
 				<div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch my-2">
 					<div class="card" style="width: 18rem;">
-						<img src="{{ asset('images/produits/' ~ produit.image) }}" class="img-fluid" alt="Image du produit {{ produit.nom }}">
+						<img src="{{ produit.product.images.0 }}" class="img-fluid" alt="Image du produit {{ produit.product.name }}">
 						<div class="card-body">
-							<h5 class="card-title">{{produit.nom}}</h5>
-							<h6 class="card-subtitle mb-2 text-muted">{{ produit.prix}}€</h6>
+							<h5 class="card-title">{{produit.product.name}}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">{{ produit.price.unit_amount / 100}}€</h6>
 							<p class="card-text">
-								{% if produit.description | length > 33 %}
-									{{ produit.description | slice(0, 33)}}...
+								{% if produit.product.description | length > 33 %}
+									{{ produit.product.description | slice(0, 33)}}...
 								{% else %}
-									{{ produit.description }}
+									{{ produit.product.description }}
 								{% endif %}
 							</p>
-
-							{# 
-							si la description contient + de 33 caractères, je coupe la description
-							sinon, j'affiche la description entière
-							#}
-
+							{# si la description contient + de 33 caractères, je coupe la description sinon, j'affiche la description entière #}
 						</div>
 						<div class="card-footer">
-							<a href="{{ path('produit_show', {'id': produit.id }) }}" class="btn btn-primary">{% trans %}Voir le produit{% endtrans %}</a>
-							Par
-							<b>{{ produit.auteur }}</b>
+							<a href="{{ path('produit_show', {'id': produit.product.id }) }}" class="btn btn-primary">{% trans %}Voir le produit{% endtrans %}</a>
+							<a href="{{ path('cart_add', {'id': produit.price.id}) }}" class="card-link btn btn-primary"> {% trans %}Ajouter au panier{% endtrans %}</a>
+							{# Par <b>{{ produit.auteur }}</b> #}
 						</div>
 					</div>
 				</div>

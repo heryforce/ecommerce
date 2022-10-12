@@ -2,23 +2,21 @@
 
 namespace App\Service\Cart;
 
-use App\Repository\ProduitRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CartService
 {
-    private $session;
-    private $pRepo;
+    private $rs;
 
-    public function __construct(SessionInterface $session, ProduitRepository $pRepo)
+    public function __construct(RequestStack $rs)
     {
-        $this->session = $session;
-        $this->pRepo = $pRepo;
+        $this->rs = $rs;
     }
 
     public function add($id)
     {
-        $cart = $this->session->get('cart', []);
+        $cart = $this->rs->getSession()->get('cart', []);
         // récupère le panier s'il existe, ou un tableau vide par défaut
 
         if (!empty($cart[$id])) {
@@ -29,13 +27,13 @@ class CartService
         // si l'id du produit existe déjà, j'augmente sa quantité de 1
         // sinon, l'id du produit n'existe pas, je lui attribue une quantité de 1
 
-        $this->session->set('cart', $cart);
+        $this->rs->getSession()->set('cart', $cart);
         // le panier dans la session 'cart' prend la valeur de notre panier $cart
     }
 
     public function delete($id)
     {
-        $cart = $this->session->get('cart', []);
+        $cart = $this->rs->getSession()->get('cart', []);
         // récupère le panier s'il existe, ou un tableau vide par défaut
 
         if (!empty($cart[$id])) {
@@ -43,13 +41,13 @@ class CartService
         }
         // si l'id du produit existe dans notre panier, alors je supprime cet id du panier
 
-        $this->session->set('cart', $cart);
+        $this->rs->getSession()->set('cart', $cart);
         // le panier dans la session 'cart' prend la valeur de notre panier $cart
     }
 
     public function decrement($id)
     {
-        $cart = $this->session->get('cart', []);
+        $cart = $this->rs->getSession()->get('cart', []);
         // récupère le panier s'il existe, ou un tableau vide par défaut
 
         if ($cart[$id] > 1)
@@ -61,46 +59,56 @@ class CartService
             - soit sa quantité est égale ou inférieure à 1, dans les deux cas je supprime le produit de mon panier
         */
 
-        $this->session->set('cart', $cart);
+        $this->rs->getSession()->set('cart', $cart);
         // je sauvegarde l'état du panier dans la session
     }
 
     public function empty()
     {
-        $this->session->set('cart', []);
+        $this->rs->getSession()->set('cart', []);
         // pour vider le panier, il suffit de remplacer le panier dans la session par un tableau vide
     }
 
-    public function getFilledCart()
+    public function getCartWithData($stripeSK)
     {
-        $cart = $this->session->get('cart', []);
-        // récupère le panier s'il existe, ou un tableau vide par défaut
+        \Stripe\Stripe::setApiKey($stripeSK);
+        $stripe = new \Stripe\StripeClient($stripeSK);
+
+        $cart = $this->rs->getSession()->get('cart', []);
 
         $cartWithData = [];
 
-        foreach ($cart as $id => $quantity) {
+        foreach ($cart as $price_id => $quantity) {
             $cartWithData[] = [
-                'product' => $this->pRepo->find($id),
+                // 'product' => $this->repo->find($id),
+                'product' => $stripe->products->retrieve($stripe->prices->retrieve($price_id)->product),
+                'price' => $stripe->prices->retrieve($price_id)->unit_amount / 100,
+                'id' => $price_id,
                 'quantity' => $quantity
             ];
         }
+        // pour chaque id contenu dans mon tableau $cart
+        // je rajoute une case à mon tableau multidimensionnel $cartWithData
+        // chaque case de ce tableau est elle-même un tableau contenant deux cases : une case product qui contient le produit lié à l'id et une case quantity qui contient sa quantité
+
         return $cartWithData;
-        // pour chaque id de produit stocké dans $cart, je remplis mon tableau cartWithData[] avec des objets Produit et la quantité de chaque objet
     }
 
-    public function getTotal()
+    public function getTotal($stripeSK)
     {
         $total = 0;
-        $cartWithData = $this->getFilledCart();
+        $cartWithData = $this->getCartWithData($stripeSK);
 
-        if ($cartWithData) {
-            foreach ($cartWithData as $item) {
-                $totalItem = $item['product']->getPrix() * $item['quantity'];
-                $total += $totalItem;
-            }
+        \Stripe\Stripe::setApiKey($stripeSK);
+        // $stripe = new \Stripe\StripeClient($stripeSK);
+
+        foreach ($cartWithData as $item) {
+            $totalItem = $item['price'] * $item['quantity'];
+            $total += $totalItem;
+            // équivaut à écrire $total = $total + $totalItem;
+
+            // à chaque tour de boucle, j'ajoute au total du panier les totaux par produit
         }
         return $total;
-        // pour chaque produit stocké dans $cartWithData, je calcule d'abord le total par produit (produit * quantité), puis je l'ajoute au total final
-
     }
 }

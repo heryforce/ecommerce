@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfilController extends AbstractController
 {
     /**
-     * @Route("/{_locale}/profil", name="profil")
+    //  * @Route("/{_locale}/profil", name="profil")
      */
     public function index(ProduitRepository $pRepo): Response
     {
@@ -29,7 +29,7 @@ class ProfilController extends AbstractController
     }
 
     /**
-     * @Route("/{_locale}/profil/show/{id}", name="profil_show")
+    //  * @Route("/{_locale}/profil/show/{id}", name="profil_show")
      */
     public function show(ProduitRepository $pRepo, $id, UserRepository $uRepo)
     {
@@ -51,7 +51,7 @@ class ProfilController extends AbstractController
     }
 
     /**
-     * @Route("/{_locale}/profil/delete/{id}", name="profil_delete")
+    //  * @Route("/{_locale}/profil/delete/{id}", name="profil_delete")
      */
     public function delete($id, EntityManagerInterface $mg)
     {

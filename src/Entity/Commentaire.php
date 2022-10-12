@@ -33,12 +33,6 @@ class Commentaire
      */
     private $auteur;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Produit::class, inversedBy="commentaire")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $produit;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -76,18 +70,6 @@ class Commentaire
     public function setAuteur(?User $auteur): self
     {
         $this->auteur = $auteur;
-
-        return $this;
-    }
-
-    public function getProduit(): ?Produit
-    {
-        return $this->produit;
-    }
-
-    public function setProduit(?Produit $produit): self
-    {
-        $this->produit = $produit;
 
         return $this;
     }

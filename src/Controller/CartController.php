@@ -12,11 +12,14 @@ class CartController extends AbstractController
     /**
      * @Route("/{_locale}/cart", name="cart")
      */
-    public function index(CartService $cs): Response
+    public function index(CartService $cs, $stripeSK): Response
     {
+        $cartWithData = $cs->getCartWithData($stripeSK);
+        $total = $cs->getTotal($stripeSK);
+
         return $this->render('cart/index.html.twig', [
-            'items' => $cs->getFilledCart(),
-            'total' => $cs->getTotal()
+            'items' => $cartWithData,
+            'total' => $total
         ]);
     }
 
@@ -54,15 +57,5 @@ class CartController extends AbstractController
     {
         $cs->empty();
         return $this->redirectToRoute('cart');
-    }
-
-    /**
-     * @Route("/{_locale}/cart/pay", name="cart_pay")
-     */
-    public function pay(CartService $cs)
-    {
-        $cs->empty();
-        return $this->render('cart/pay.html.twig');
-        // pour "payer", il suffit de lancer la méthode empty() qui vide le panier, puis afficher le template de paiement effectué
     }
 }

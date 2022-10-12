@@ -11,12 +11,17 @@ class RequestListener
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
-        // dd($request->get('_route'));
         if ($request->get('_route') == 'set_locale') {
-            if ($request->getDefaultLocale() == 'fr')
-                $request->setLocale('en');
-            else
-                $request->setLocale('fr');
+            switch ($request->attributes->get('_route_params')['loc']) {
+                case 'fr':
+                    $request->setLocale('fr');
+                    break;
+                case 'en':
+                    $request->setLocale('en');
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
