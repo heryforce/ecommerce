@@ -40,7 +40,6 @@ class DashboardController extends AbstractDashboardController
         $submenu1 = [
             MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Commentaire::class),
             MenuItem::linkToCrud('Catégories', 'fas fa-tags', Categorie::class),
-            MenuItem::linkToCrud('Produits', 'fas fa-candy-cane', Produit::class),
         ];
 
         $submenu2 = [

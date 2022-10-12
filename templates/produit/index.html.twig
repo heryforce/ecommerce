@@ -15,16 +15,16 @@
 
 	{% else %}
 
-		{{ form_start(sForm) }}
-		{{ form_widget(sForm.recherche, {
-			'attr': {
-				'placeholder': 'Recherchez un produit par son nom'
-			}
-		}) }}
-
-		<button class="btn btn-primary mt-2" type="submit">{% trans %}Rechercher{% endtrans %}</button>
-		<a href="{{ 'produit' }}" class="btn btn-info mt-2 ml-2 ">{% trans %}Remise à zéro{% endtrans %}</a>
-		{{ form_end(sForm) }}
+		{# {{ form_start(sForm) }}
+				{{ form_widget(sForm.recherche, {
+					'attr': {
+						'placeholder': 'Recherchez un produit par son nom'
+					}
+				}) }}
+		
+				<button class="btn btn-primary mt-2" type="submit">{% trans %}Rechercher{% endtrans %}</button>
+				<a href="{{ 'produit' }}" class="btn btn-info mt-2 ml-2 ">{% trans %}Remise à zéro{% endtrans %}</a>
+				{{ form_end(sForm) }} #}
 
 		<div class="row">
 			{% for produit in produits %}
@@ -44,9 +44,14 @@
 							{# si la description contient + de 33 caractères, je coupe la description sinon, j'affiche la description entière #}
 						</div>
 						<div class="card-footer">
-							<a href="{{ path('produit_show', {'id': produit.product.id }) }}" class="btn btn-primary">{% trans %}Voir le produit{% endtrans %}</a>
-							<a href="{{ path('cart_add', {'id': produit.price.id}) }}" class="card-link btn btn-primary"> {% trans %}Ajouter au panier{% endtrans %}</a>
-							{# Par <b>{{ produit.auteur }}</b> #}
+							<div class="row">
+								<a href="{{ path('produit_show', {'id': produit.price.id }) }}" class="btn btn-primary mb-2">
+									<i class="fas fa-eye"></i>
+								</a>
+								<a href="{{ path('cart_add', {'id': produit.price.id}) }}" class="card-link btn btn-primary">
+									<i class="fas fa-cart-plus"></i>
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

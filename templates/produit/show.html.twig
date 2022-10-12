@@ -13,34 +13,30 @@
 
 {# affichage des msg flash #}
 
-	<h1 class="text-center bg-light my-3">{% trans %}Fiche produit{% endtrans %} : "{{ produit.nom }}"</h1>
+	<h1 class="text-center bg-light my-3">{% trans %}Fiche produit{% endtrans %} : "{{ produit.name }}"</h1>
 
 	<div class="row">
 		<div class="col-md-4">
-			<img src="{{ asset('images/produits/' ~ produit.image) }}" alt="Image de {{ produit.nom }}" style="width: 200px">
+			<img src="{{ produit.images.0 }}" alt="Image de {{ produit.name }}" style="width: 200px">
 		</div>
 		<div class="col md-8">
 			<h3>
 				{{ produit.description }}
 			</h3>
 			<h4>
-				{{ produit.prix }}€
+				{{ price.unit_amount / 100 }}€
 			</h4>
 			<h5>
-				{# {% trans %}Ajouté par{% endtrans %} <a href="{{ path('profil_show', { 'id': produit.auteur.id}) }}">{{ produit.auteur.username }}</a> {% trans %}dans la catégorie{% endtrans %} {{ produit.categorie }} #}
-				{# le pseudo de l'utilisateur a qui appartient le produit est un lien vers sa page de profil #}
+				 {% trans %}Dans la catégorie{% endtrans %} :
+				 <b>AJOUTER LES CATEGORIES</b>
+				 {# {{ produit.categorie }}  #}
 			</h5>
-
-			{# {% if app.user is same as (produit.auteur) %} #}
-				{# <a href="{{ path('produit_edit', {'id': produit.id}) }}" class="btn btn-primary">{% trans %}Editer mon produit{% endtrans %}</a> #}
-				{# si l'utilisateur connecté est le même que celui qui a posté le produit, il voit un lien permettant d'éditer le produit #}
-			{# {% endif %} #}
-			<a href="{{ path('cart_add', {'id': produit.id}) }}" class="btn btn-success">{% trans %}Ajouter au panier{% endtrans %}</a>
+			<a href="{{ path('cart_add', {'id': price.id}) }}" class="btn btn-success"><i class="fas fa-cart-plus"></i></a>
 		</div>
 	</div>
 
 
-	<h2 class="text-center my-3 bg-light">{% trans %}Commentaires des utilisateurs{% endtrans %}</h2>
+	{# <h2 class="text-center my-3 bg-light">{% trans %}Commentaires des utilisateurs{% endtrans %}</h2>
 
 	{% if coms | length <= 0 %}
 
@@ -77,7 +73,7 @@
 		{{ form_end(cForm) }}
 	{% else %}
 		<a href="{{ path('app_login') }}">{% trans %}Veuillez vous connecter pour poster un commentaire.{% endtrans %}</a>
-	{% endif %}
+	{% endif %} #}
 
 {# 
 	si l'utilisateur est connecté, il peut voir le formulaire pour poster un commentaire

@@ -40,7 +40,7 @@ class ProduitController extends AbstractController
         // if ($form->isSubmitted() && $form->isValid())
         //     $produits = $repo->getProduitsByName($form->get('recherche')->getData());
         // else
-            // $produits = $repo->findAllOrderAsc();
+        // $produits = $repo->findAllOrderAsc();
         // si on a lancé une recherche de produit, je récupère les produits recherchés via la méthode que j'ai créee dans le repository
         // sinon, je récupère tous les produits en BDD via une autre méthode que j'ai créee dans le repository qui trie les produits par ordre alphabétique
 
@@ -53,8 +53,7 @@ class ProduitController extends AbstractController
         $produits = [];
         // je récupère les données des produits pour l'affichage
         foreach ($prices as $price) {
-            if ($stripe->products->retrieve($price->product)->active)
-            {
+            if ($stripe->products->retrieve($price->product)->active) {
                 $produits[] = [
                     'product' => $stripe->products->retrieve($price->product),
                     'price' => $price,
@@ -69,44 +68,48 @@ class ProduitController extends AbstractController
     }
 
     /**
-    //  * @Route("/{_locale}/produit/show/{id}", name="produit_show")
+     * @Route("/{_locale}/produit/show/{id}", name="produit_show")
      */
     public function show(EntityManagerInterface $manager, CommentaireRepository $cRepo, Request $rq, $id, TranslatorInterface $t, $stripeSK)
     {
         $stripe = new \Stripe\StripeClient($stripeSK);
 
-        $produit = $stripe->products->retrieve($id);
+        $price = $stripe->prices->retrieve($id);
+        $produit = $stripe->products->retrieve($price->product);
         if (!$produit)
             return $this->render('errors/404.html.twig');
         // si un visiteur essaie de visualiser un produit qui n'existe pas, il est redirigé vers une erreur 404 (not found)
 
-        $com = new Commentaire;
-        $form = $this->createForm(CommentaireType::class, $com);
+        // LIER LES COMMENTAIRES AUX PRODUITS AVANT DE REACTIVER L'AJOUT DE COMMENTAIRES
 
-        $coms = $cRepo->getComsByProduit($produit);
+        // $com = new Commentaire;
+        // $form = $this->createForm(CommentaireType::class, $com);
+
+        // $coms = $cRepo->getComsByProduit($produit);
         // cette méthode récupère les commentaires liés au produit
 
-        $form->handleRequest($rq);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $com->setAuteur($this->getUser())
-                ->setCreatedAt(new \DateTime());
+        // $form->handleRequest($rq);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     $com->setAuteur($this->getUser())
+        //         ->setCreatedAt(new \DateTime());
             // si le commentaire est envoyé, son auteur est bien l'utilisateur actuellement connecté
 
-            $manager->persist($com);
-            $manager->flush();
+        //     $manager->persist($com);
+        //     $manager->flush();
 
-            $text = $t->trans('Votre commentaire a bien été posté !');
+        //     $text = $t->trans('Votre commentaire a bien été posté !');
 
-            $this->addFlash('success', $text);
-            return $this->redirectToRoute('produit_show', [
-                'id' => $produit
-            ]);
-        }
+        //     $this->addFlash('success', $text);
+        //     return $this->redirectToRoute('produit_show', [
+        //         'id' => $produit->id
+        //     ]);
+        // }
 
         return $this->render('produit/show.html.twig', [
             'produit' => $produit,
-            'cForm' => $form->createView(),
-            'coms' => $coms
+            'price' => $price,
+            // 'cForm' => $form->createView(),
+            // 'coms' => $coms
         ]);
     }
 }

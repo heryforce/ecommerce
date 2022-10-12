@@ -3,7 +3,6 @@
 namespace App\Service\Cart;
 
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class CartService
 {

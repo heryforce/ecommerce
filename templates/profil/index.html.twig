@@ -1,58 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% trans %}Votre profil{% endtrans %}
+{% block title %}
+	{% trans %}Votre profil{% endtrans %}
 {% endblock %}
 
 {% block body %}
 
 	<h1 class="bg-light text-center my-3">{% trans %}Votre profil{% endtrans %}</h1>
 
-	{% if produits | length == 0 %}
+	{# AJOUTER LA CONDITION : SI L'UTILISATEUR N'A JAMAIS PASSE DE COMMANDE #}
 
-		<h2 class="text-center">{% trans %}Vous n'avez pas encore ajouté de produit !{% endtrans %} {% trans %}Pour commencer à en ajouter{% endtrans %},
-			<a href="{{ path('produit_add') }}">{% trans %}cliquez ici !{% endtrans %}</a>
-		</h2>
+	{# {% if produits | length == 0 %} #}
 
-	{% else %}
+	<h2 class="text-center">{% trans %}Votre historique de commande est vide !{% endtrans %}
+	</h2>
 
-		<table class="table">
-			<thead>
-				<th>{% trans %}Nom du produit{% endtrans %}</th>
-				<th>{% trans %}Catégorie{% endtrans %}</th>
-				<th>{% trans %}Description{% endtrans %}</th>
-				<th>{% trans %}Prix{% endtrans %}</th>
-				<th></th>
-			</thead>
-			<tbody>
-				{% for produit in produits %}
-					<tr>
-						<td>
-							{{ produit.nom }}
-						</td>
-						<td>
-							{{ produit.categorie }}
-						</td>
-						<td>
-							{{ produit.description }}
-						</td>
-						<td>
-							{{ produit.prix }}€
-						</td>
-						<td>
-							<a href="{{ path('produit_show', { 'id': produit.id }) }}" class="btn btn-primary">{% trans %}Page du produit{% endtrans %}</a>
-						</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+	{# {% else %} #}
 
-	{% endif %}
+	<table
+		class="table">{# AFFICHER L'HISTORIQUE DES COMMANDES DE L'UTILISATEUR #}
+	</table>
 
-	{#
-		si l'utilisateur n'a jamais posté de produit, un message est affiché
-		sinon, un tableau contenant les infos des produits que l'utilisateur a postés est affiché
-	 #}
+	{# {% endif %} #}
 
-	<a href="{{ path('profil_delete', {'id': app.user.id}) }}" class="btn btn-danger btn-lg w-100">{% trans %}Supprimer mon profil{% endtrans %}</a>
+	<a onclick="return confirm('Voulez-vous supprimer votre profil ? Cette action est irréversible.')" href="{{ path('profil_delete', {'id': app.user.id}) }}" class="btn btn-danger btn-lg w-100">
+		{% trans %}Supprimer mon profil{% endtrans %}</a>
 
 {% endblock %}
