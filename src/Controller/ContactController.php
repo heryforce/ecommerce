@@ -19,6 +19,8 @@ class ContactController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $manager, ContactNotification $notification, TranslatorInterface $t): Response
     {
+        // UTILISER LE MAILER DE SYMFONY
+
         $contact = new Contact;
         $form = $this->createForm(ContactType::class, $contact);
 

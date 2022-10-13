@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfilController extends AbstractController
 {
     /**
-    //  * @Route("/{_locale}/profil", name="profil")
+     * @Route("/{_locale}/profil", name="profil")
      */
     public function index(): Response
     {
@@ -23,12 +23,11 @@ class ProfilController extends AbstractController
 
         // AJOUTER L'HISTORIQUE DE COMMANDE DE L'UTILISATEUR
 
-        return $this->render('profil/index.html.twig', [
-        ]);
+        return $this->render('profil/index.html.twig', []);
     }
 
     /**
-    //  * @Route("/{_locale}/profil/delete/{id}", name="profil_delete")
+     * @Route("/{_locale}/profil/delete/{id}", name="profil_delete")
      */
     public function delete($id, EntityManagerInterface $mg)
     {
